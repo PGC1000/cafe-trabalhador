@@ -1,14 +1,3 @@
-  // Scroll to top
-  const scrollBtn = document.querySelector(".scroll-to-top");
-  if (scrollBtn) {
-    scrollBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
-
-  // Cookies
-  
 document.addEventListener("DOMContentLoaded", () => {
   const banner = document.getElementById("cookie-banner");
   const modal = document.getElementById("cookie-modal");
@@ -22,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!saved.stats && !saved.geo) {
     banner.style.display = "flex";
   } else {
-    if (saved.stats) loadGA();
+    if (saved.stats) enableTracking();
     if (saved.geo) console.log("📍 Localização ativada");
   }
 
@@ -34,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("cookie-consent", JSON.stringify({ stats: true, geo: true }));
     banner.style.display = "none";
     modal.style.display = "none";
-    loadGA();
+    enableTracking();
     console.log("📍 Localização ativada");
   };
 
@@ -51,18 +40,35 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("cookie-consent", JSON.stringify({ stats, geo }));
     banner.style.display = "none";
     modal.style.display = "none";
-    if (stats) loadGA();
+    if (stats) enableTracking();
     if (geo) console.log("📍 Localização ativada");
   };
-
-  function loadGA() {
-    const script = document.createElement("script");
-    script.src = "https://www.googletagmanager.com/gtag/js?id=G-81NMBGT9KT";
-    script.async = true;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-81NMBGT9KT');
-  }
 });
+
+function enableTracking() {
+  trackVisits();
+
+  let startTime = Date.now();
+  window.addEventListener('beforeunload', function () {
+    let timeSpent = (Date.now() - startTime) / 1000;
+    let total = parseFloat(localStorage.getItem('timeSpent') || '0');
+    total += timeSpent;
+    localStorage.setItem('timeSpent', total);
+  });
+
+  let script = document.createElement('script');
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=G-81NMBGT9KT';
+  script.async = true;
+  document.head.appendChild(script);
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-81NMBGT9KT');
+}
+
+function trackVisits() {
+  let visits = parseInt(localStorage.getItem('siteVisits') || '0');
+  visits += 1;
+  localStorage.setItem('siteVisits', visits);
+}
