@@ -57,12 +57,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function loadGA() {
     const script = document.createElement("script");
-    script.src = "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX";
+    script.src = "https://www.googletagmanager.com/gtag/js?id=G-81NMBGT9KT";
     script.async = true;
     document.head.appendChild(script);
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-81NMBGT9KT');
   }
 });
